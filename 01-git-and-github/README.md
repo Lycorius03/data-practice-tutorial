@@ -100,9 +100,9 @@ Git 是安装在电脑上的版本管理工具。它会记录文件发生过哪�
 
 ### 关于网络访问
 
-GitHub 需要正常联网。如果页面打不开或加载很慢，请先检查网络连接。必要时，请在遵守所在地法律法规、学校规定和网络安全要求的前提下，使用合规方式科学上网。本教程不讲具体配置，也不要安装来路不明的软件，或向他人提供账号、验证码和密钥。
+GitHub 需要正常联网时，如果页面打不开或加载很慢，可以使用科学上网工具，如果不会可以暂时用[Watt Toolkit](https://steampp.net/)平替，后续了解之后再使用科学上网的方式
 
-![科学上网工具的示例页面](../image/watt-toolkit.png)
+![watt-toolkit](../image/watt-toolkit.png)
 
 ## 3. 认识 GitHub 页面
 
@@ -203,6 +203,58 @@ git commit -m "Add project introduction"
 - `Update setup instructions`
 
 也可以使用清楚的中文，例如 `补充环境安装说明`。不要使用 `update`、`123`、`修改一下` 这类无法说明内容的信息。
+
+#### 7.4.1 Angular Commit Message Convention
+
+当项目中的提交越来越多，只写“改了一下”会让其他人很难理解历史。Angular 项目制定了一套结构化的提交信息规范，很多项目也会参考这种格式。它的核心写法是：
+
+```text
+<type>(<scope>): <summary>
+```
+
+- `type`：说明这次提交属于哪一种改动，必须填写。
+- `scope`：说明改动影响的范围，可以省略；填写时放在英文括号中。
+- `summary`：用一句简短的话说明具体改了什么，必须填写。
+
+例如：
+
+```text
+docs(git): add commit convention guide
+feat(page): add theme switcher
+fix(page): correct button animation
+refactor(data): simplify csv loading
+test(model): add prediction tests
+```
+
+Angular 官方规范中常见的 `type` 如下：
+
+| type | 适用情况 | 示例 |
+| --- | --- | --- |
+| `feat` | 增加新功能 | `feat(page): add welcome card` |
+| `fix` | 修复错误 | `fix(page): correct broken link` |
+| `docs` | 只修改文档 | `docs(readme): add setup steps` |
+| `refactor` | 重构代码，但没有增加功能或修复错误 | `refactor(data): simplify loader` |
+| `perf` | 改进性能 | `perf(data): reduce repeated reads` |
+| `test` | 增加或修改测试 | `test(model): add accuracy test` |
+| `build` | 修改构建系统或依赖 | `build: update dependencies` |
+| `ci` | 修改自动化检查或部署配置 | `ci: update workflow` |
+
+一些参考该规范的项目还会使用 `style`、`chore`、`revert` 等类型。不同项目允许的类型可能不同，因此加入已有项目时，应先阅读它的 `README.md`、`CONTRIBUTING.md` 或提交历史，不要自行创造类型。
+
+对初学者来说，先写好一行标题就够了。可以直接执行：
+
+```powershell
+git commit -m "docs(git): add commit convention guide"
+```
+
+提交前检查四件事：
+
+1. `type` 是否准确，例如新增功能用 `feat`，修复错误用 `fix`。
+2. `scope` 是否简短；无法明确范围时可以省略，写成 `docs: update setup guide`。
+3. `summary` 是否说清楚具体改动，避免只写 `update`、`change` 或 `fix bug`。
+4. 冒号后是否有一个空格，末尾是否没有多余句号。
+
+复杂提交还可以在标题下面增加正文和页脚，用来解释原因、影响范围、关联的问题或不兼容改动；本章实验先掌握标题格式即可。Angular 官方的完整规则可参考 [Commit Message Guidelines](https://github.com/angular/angular/blob/main/contributing-docs/commit-message-guidelines.md)。
 
 ### 7.5 push：上传本地提交
 
