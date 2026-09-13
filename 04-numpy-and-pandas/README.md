@@ -301,7 +301,16 @@ S010,小安,A,9.0,96,1.00
 8. 把筛选结果保存为 `output/excellent_students.csv`。
 9. 把分组结果保存为 `output/group_summary.csv`。
 
-（图片 028：实验完成后 VS Code 终端中的分组统计结果与 output 目录中的两个 CSV 文件）
+完成代码后，在项目根目录运行并检查结果：
+
+```powershell
+python .\main.py
+Get-ChildItem .\output
+Get-Content .\output\excellent_students.csv
+Get-Content .\output\group_summary.csv
+```
+
+终端应列出两个 CSV 文件，并能直接显示其中的文本内容。若提示路径不存在，先用 `Get-Location` 和 `Get-ChildItem` 检查当前目录，不要在代码中改成只适用于自己电脑的绝对路径。
 
 ### 起步代码
 

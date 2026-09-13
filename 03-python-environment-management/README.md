@@ -22,20 +22,15 @@ Conda 环境可以理解为一个独立工具箱：每个工具箱有自己的 P
 4. 安装位置尽量使用英文路径，不要随意改动高级选项。
 5. 完成安装后，在开始菜单打开 **Anaconda Prompt**。
 
-（图片 020：Anaconda 官方下载页面，标出 Windows 64 位安装程序）
-
-（图片 021：Anaconda 安装类型页面，标出仅为当前用户安装选项）
-
-（图片 022：Anaconda 安装目录页面，示例路径不包含中文和特殊符号）
-
 在 Anaconda Prompt 中检查：
 
 ```powershell
 conda --version
 python --version
+where.exe conda
 ```
 
-若都显示版本号，说明基础安装可用。
+前两条命令应显示版本号，`where.exe conda` 应显示 Conda 的安装位置。若命令找不到，先关闭并重新打开 Anaconda Prompt；仍然无效时，再检查安装是否完成，不要立即重复安装多套 Python。
 
 ## 3. 创建环境
 
@@ -106,18 +101,29 @@ python -m pip list
 ## 5. 在 VS Code 中选择正确解释器
 
 1. 安装 VS Code。
-2. 在扩展市场安装 Microsoft 发布的 **Python** 扩展。
+2. 在 VS Code 终端安装 Microsoft 发布的 **Python** 扩展：
+
+   ```powershell
+   code --install-extension ms-python.python
+   ```
+
+   如果系统提示找不到 `code` 命令，再打开左侧“扩展”，搜索 `Python`，确认发布者为 Microsoft 后安装。
+
 3. 使用“文件 → 打开文件夹”打开项目目录。
 4. 按 `Ctrl+Shift+P` 打开命令面板。
 5. 搜索并运行 `Python: Select Interpreter`。
 6. 选择名称中包含 `data-practice` 的解释器。
 7. 新建终端。终端前方应出现环境名。
 
-（图片 023：VS Code 扩展市场中的 Microsoft Python 扩展）
+选择后不要只凭界面判断。先在 VS Code 终端执行：
 
-（图片 024：VS Code 的 Python Select Interpreter 命令）
+```powershell
+conda env list
+python -c "import sys; print(sys.executable)"
+python -m pip --version
+```
 
-（图片 025：解释器列表中 data-practice 环境的位置）
+`conda env list` 中带 `*` 的应是 `data-practice`。后两条命令显示的 Python 和 Pip 路径也都应位于这个环境中。
 
 在项目中创建 `check_env.py`：
 
@@ -180,7 +186,14 @@ python -m pip show pandas
 
 修复时不要先卸载所有软件。先确认当前解释器路径，再把包装到这个解释器对应的环境中。
 
-（图片 026：VS Code 状态栏中的当前 Python 解释器位置）
+修复后重新打开 VS Code 终端，再次执行以下命令验证：
+
+```powershell
+python -c "import sys; print(sys.executable)"
+python -m pip show pandas
+```
+
+第一条确认正在运行哪一个 Python，第二条的 `Location` 确认 Pandas 安装到了哪里。两处都指向 `data-practice` 才算真正解决。
 
 ## 8. 导出和恢复环境
 
@@ -243,12 +256,11 @@ Jupyter Notebook 会把说明、代码和结果放在分块页面中，常用于
 conda activate data-practice
 conda install jupyter ipykernel
 python -m ipykernel install --user --name data-practice --display-name "Python (data-practice)"
+jupyter kernelspec list
 jupyter notebook
 ```
 
-打开页面后要选择 `Python (data-practice)` 内核。Notebook 能运行不代表 VS Code 已选择同一环境，两者需要分别检查。
-
-（图片 027：Jupyter 新建页面中的 Python data-practice 内核选项，本图仅用于扩展作业）
+`jupyter kernelspec list` 的结果中应出现 `data-practice`。打开页面后要选择 `Python (data-practice)` 内核。Notebook 能运行不代表 VS Code 已选择同一环境，两者需要分别检查。
 
 ## 11. 主实验：建立并验证独立环境
 

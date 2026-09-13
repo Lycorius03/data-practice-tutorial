@@ -188,7 +188,16 @@ R008,小陈,北京,20,,yes,2026-08-08
 7. 根据 `record_id` 和其他字段完全一致的情况删除重复行。
 8. 新增 `hours_level`：小于 4 为 `low`，4 到小于 7 为 `medium`，7 及以上为 `high`。
 
-（图片 030：清洗前后数据质量统计对比，突出缺失数、重复数和类别取值变化）
+完成程序后，用终端重新生成并查看清洗报告：
+
+```powershell
+python .\clean_data.py
+Get-ChildItem .\output
+Get-Content .\output\quality_report.txt
+Get-Content .\output\registrations_clean.csv -TotalCount 6
+```
+
+不要只检查“程序没有报错”。报告中的行数、重复数、缺失数和取值范围必须符合下方验收标准；CSV 的前几行还应能证明字段名和数据格式正确。
 
 ### 必须产物
 

@@ -177,7 +177,15 @@ chapter02-exploration/
 7. 在 `report.md` 中回答：哪组人数最多、哪些组差异明显、是否存在可疑异常点、哪些变量可能有关联。
 8. 每个答案至少引用一个统计量或一张图，并写出一项限制。
 
-（图片 029：四幅实验图表的组合预览，标明柱状图、直方图、散点图与箱线图）
+在项目根目录一次生成全部产物，再用命令检查：
+
+```powershell
+python .\analysis.py
+Get-ChildItem .\output
+Get-Content .\output\summary.csv
+```
+
+输出目录中应同时出现四张 PNG 图和 `summary.csv`。图表本身可在 VS Code 文件区单击打开；教程不提供固定答案图，因为你需要根据自己的运行结果判断坐标、标题、图例和数据是否一致。
 
 ### 报告模板
 

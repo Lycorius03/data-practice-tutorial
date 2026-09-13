@@ -20,7 +20,18 @@
 - **训练集**：用于 `fit`，让模型学习。
 - **验证集**：训练时不参与学习，用于检查新数据上的表现。
 
-（图片 031：一份数据划分为训练集和验证集，再经过 fit、predict 与评价的流程图）
+可以先把完整过程记成下面这条文字流程：
+
+```text
+原始数据
+  -> 分出特征 X 和标签 y
+  -> train_test_split 划分训练集与验证集
+  -> model.fit(X_train, y_train)
+  -> model.predict(X_valid)
+  -> 用 y_valid 评价预测结果
+```
+
+最重要的边界是：验证集用于检查结果，不能提前交给模型学习。
 
 ```python
 from sklearn.model_selection import train_test_split

@@ -36,7 +36,13 @@ final-data-project/
 
 不要把 Conda 环境、缓存、临时文件和敏感信息提交到 Git。原始数据是否能上传，要遵守数据提供者的许可；不确定时先放入 `.gitignore` 并询问老师。
 
-（图片 033：VS Code 资源管理器中的最终项目目录结构）
+创建好目录和文件后，在项目根目录检查结构：
+
+```powershell
+tree /F
+```
+
+把命令输出与上面的目录树逐项比较。若文件出现在错误目录，应先移动到正确位置再写代码；清楚的项目结构本身就是可复现性的一部分。
 
 ## 3. 完整工作流
 
@@ -281,7 +287,18 @@ I0002,386.20
 
 以下情况需要优先修正，即使模型分数较高：标签泄漏、训练与验证混用、无法重新运行、覆盖原始数据、预测文件编号错位、提交敏感信息。
 
-（图片 034：最终项目运行完成后的终端、实验结果表和 predictions.csv 预览）
+最终验收不要依赖截图。在项目根目录依次重新运行并检查结果：
+
+```powershell
+python .\src\explore.py
+python .\src\train.py
+python .\src\predict.py
+Get-Content .\output\experiment_results.csv
+Get-Content .\output\predictions.csv -TotalCount 6
+git status
+```
+
+三条 Python 命令都应成功；实验记录应包含所有方案；预测文件应有正确列名和若干数据行；`git status` 不应列出环境目录、缓存、密钥或不应提交的原始数据。
 
 ## 11. 提交清单
 

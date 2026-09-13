@@ -27,7 +27,15 @@ python hello.py
 
 如果 `python` 命令不可用，先完成下一章的环境配置。不要为了消除红色波浪线而随意安装多个 Python。
 
-（图片 019：VS Code 打开 hello.py，并标出编辑区、文件区和集成终端）
+再用终端确认自己位于正确文件夹、文件确实存在，并运行程序：
+
+```powershell
+Get-Location
+Get-ChildItem
+python .\hello.py
+```
+
+`Get-Location` 显示当前文件夹，`Get-ChildItem` 列出其中的文件。看到 `hello.py` 后再运行它，可以避免最常见的“文件明明创建了，终端却说找不到”问题。若当前终端不在项目文件夹，可在 VS Code 中使用“终端 → 新建终端”，或先用 `Set-Location 路径` 切换目录。
 
 ## 3. 最重要的语法差异
 
