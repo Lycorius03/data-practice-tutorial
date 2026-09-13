@@ -1,0 +1,14 @@
+# Teacher-only finished preview. Students create index.html from the TXT source.
+01-git-and-github/my-first-page/
+
+# Editor and operating system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Temporary files
+*.tmp
+*.log
+~$*

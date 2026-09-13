@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="拖动、探索、留下自己的宣言。一个从第一次尝试开始的个人数字空间。">
+<title>未定义 UNDEFINED · 从这里开始</title>
+<style>
+/* 单文件作品：没有字体、图片或脚本的外部依赖。 */
+:root{--bg:#101112;--panel:#191b1d;--ink:#f3f1eb;--muted:#aaaead;--line:#35383a;--accent:#d6f38c;--accent-rgb:214,243,140;--dark:#151810;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:25px}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.7}
+body.modal-open{overflow:hidden}
+button,input,textarea{font:inherit}
+button,a,input,textarea{-webkit-tap-highlight-color:transparent}
+button{cursor:pointer}
+a{color:inherit;text-decoration:none}
+button{color:inherit}
+button:disabled{cursor:wait;opacity:.6}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible,canvas:focus-visible{outline:2px solid var(--accent);outline-offset:6px}
+::selection{background:var(--accent);color:var(--dark)}
+.shell{width:min(1440px,calc(100% - 96px));margin:auto}
+header{height:90px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:24px}
+.brand{font-weight:700;letter-spacing:.06em;font-size:18px;display:flex;align-items:center;gap:14px}
+.mark{height:29px;width:29px;display:inline-grid;place-items:center;background:var(--accent);color:var(--dark);font-size:22px;line-height:1;font-weight:500}
+.brand small{color:var(--muted);font-size:12px;font-weight:400;letter-spacing:.14em}
+nav{display:flex;align-items:center;gap:32px;font-size:14px}
+nav a:hover{color:var(--accent)}
+.nav-action{border:1px solid var(--line);border-radius:999px;background:transparent;padding:9px 19px}
+.nav-action:hover{border-color:var(--accent)}
+.hero{display:grid;grid-template-columns:.95fr 1.2fr;align-items:center;min-height:640px;position:relative;gap:10px;padding:36px 0 28px}
+.hero-copy{position:relative;z-index:1;pointer-events:none}
+.hero-copy a{pointer-events:auto}
+.eyebrow{font-size:13px;color:var(--accent);letter-spacing:.19em;margin:0 0 28px}
+h1{font-size:clamp(49px,5.2vw,78px);line-height:1.19;letter-spacing:-.065em;margin:0;font-weight:600}
+h1 span{display:block;color:var(--accent)}
+.hero-copy>p:not(.eyebrow){color:var(--muted);line-height:1.95;margin:28px 0 34px;max-width:24em}
+.primary{display:inline-flex;gap:30px;align-items:center;justify-content:space-between;border:0;background:var(--accent);color:var(--dark);padding:15px 23px;border-radius:999px;font-weight:600;min-height:54px;white-space:nowrap}
+.primary:hover{filter:brightness(1.08)}
+button:active,.primary:active{transform:translateY(1px)}
+.primary span{font-size:23px;line-height:1}
+.stage{position:relative;min-width:0;width:100%;height:565px;isolation:isolate}
+.stage canvas{display:block;width:100%;height:100%;touch-action:pan-y;cursor:grab}
+.stage canvas.dragging{cursor:grabbing}
+.stage-caption{position:absolute;top:5px;right:0;text-align:right;font-size:12px;color:var(--muted);pointer-events:none;font-family:Consolas,monospace;letter-spacing:.06em}
+.stage-caption b{display:block;color:var(--ink);font-size:14px;font-weight:400;margin-bottom:3px}
+.stage-bottom{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;align-items:center;gap:16px;flex-wrap:wrap}
+.stage-help{color:var(--muted);font-size:12px;margin:0}
+.tiny{background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 14px;min-height:38px;font-size:12px}
+.tiny:hover{border-color:var(--accent);color:var(--accent)}
+.controlbar{display:grid;grid-template-columns:1fr 1.2fr 1fr;gap:38px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:23px 0;align-items:center}
+.control-group{display:flex;align-items:center;gap:20px;flex-wrap:wrap;min-width:0}
+.control-label{color:var(--muted);font-size:12px;letter-spacing:.12em;white-space:nowrap}
+.palette{display:flex;gap:12px}
+.swatch{width:30px;height:30px;border-radius:50%;border:4px solid var(--bg);outline:1px solid transparent;padding:0;min-width:30px}
+.swatch[aria-pressed="true"]{outline-color:var(--ink)}
+.swatch:hover{transform:scale(1.15)}
+.swatch:nth-child(1){background:#d6f38c}.swatch:nth-child(2){background:#ffad91}.swatch:nth-child(3){background:#a0c4ff}
+.range-control{display:flex;gap:14px;align-items:center;flex:1}
+input[type="range"]{width:100%;min-width:65px;accent-color:var(--accent);cursor:pointer}
+output{font-family:Consolas,monospace;font-size:13px;color:var(--accent);min-width:28px}
+.control-end{justify-content:flex-end}
+.text-button{padding:8px 0;background:transparent;border:0;border-bottom:1px solid var(--line);font-size:14px}
+.text-button:hover{color:var(--accent)}
+.section{padding:88px 0}
+.section-heading{margin-bottom:34px}
+h2{font-size:clamp(30px,3.1vw,45px);line-height:1.35;letter-spacing:-.045em;font-weight:500;margin:0}
+.section-heading p{color:var(--muted);margin:14px 0 0}
+.moods{display:flex;gap:12px;min-height:320px}
+.mood{position:relative;flex:1;min-width:0;text-align:left;overflow:hidden;border:1px solid var(--line);border-radius:16px;background:var(--panel);padding:28px;display:flex;flex-direction:column;justify-content:space-between}
+.mood[aria-expanded="true"]{flex:2.3;background:var(--accent);color:var(--dark);border-color:var(--accent)}
+.mood-top{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+.mood-title{font-size:19px;font-weight:600;white-space:nowrap}
+.mood-symbol{font-size:30px;line-height:1;font-weight:300}
+.mood-word{font-size:clamp(24px,3vw,43px);font-weight:500;letter-spacing:-.035em;opacity:.65;white-space:nowrap;margin-top:60px}
+.mood[aria-expanded="true"] .mood-word{display:none}
+.mood-detail{display:none;font-size:19px;line-height:1.85;margin-top:48px;max-width:22em}
+.mood[aria-expanded="true"] .mood-detail{display:block}
+.mood-small{display:block;font-size:12px;margin-top:25px;opacity:.7}
+.manifesto{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;border-top:1px solid var(--line);padding:80px 0 84px;align-items:center}
+.manifesto p{max-width:29em;color:var(--muted);margin:20px 0 28px}
+.letter-preview{position:relative;padding:36px;border-radius:4px;background:var(--panel);border:1px solid var(--line);transform:rotate(-3deg);box-shadow:18px 22px 0 rgba(var(--accent-rgb),.06);overflow-wrap:anywhere}
+.letter-preview:before{content:"";display:block;width:48px;height:5px;background:var(--accent);margin-bottom:40px}
+.letter-preview small{display:block;font-family:Consolas,monospace;letter-spacing:.12em;font-size:12px;color:var(--muted)}
+.letter-preview strong{display:block;font-size:29px;line-height:1.6;font-weight:500;margin:15px 0}
+.letter-preview .signature{color:var(--accent);font-size:14px;margin-top:36px}
+footer{border-top:1px solid var(--line);padding:27px 0 35px;display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}
+footer p{margin:0}
+footer a{border-bottom:1px solid var(--line)}
+.skip{position:absolute;left:16px;top:-100px;z-index:5;background:var(--accent);color:var(--dark);padding:12px}.skip:focus{top:10px}
+dialog{width:min(930px,calc(100% - 32px));max-height:calc(100dvh - 48px);overflow-y:auto;border:1px solid var(--line);border-radius:20px;background:var(--bg);color:var(--ink);padding:0;box-shadow:0 30px 110px #0009}
+dialog::backdrop{background:#030608bd;backdrop-filter:blur(12px)}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:24px 30px;border-bottom:1px solid var(--line)}
+.dialog-head h2{font-size:23px}
+.close{background:transparent;border:1px solid var(--line);border-radius:50%;width:42px;height:42px;line-height:1;font-size:25px}
+.dialog-body{display:grid;grid-template-columns:1fr 1fr;gap:32px;padding:30px}
+.field{display:block;margin-bottom:20px}
+.field>span{display:block;font-size:14px;margin-bottom:8px}
+input[type="text"],textarea{width:100%;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+textarea{resize:vertical;min-height:128px}
+input::placeholder,textarea::placeholder{color:var(--muted)}
+.form-note{font-size:12px;color:var(--muted);margin:0 0 22px}
+.form-actions{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.status{font-size:13px;color:var(--accent);min-height:28px;margin:14px 0 0}
+.print-card{background:var(--accent);color:var(--dark);padding:28px;border-radius:6px;display:flex;flex-direction:column;min-height:360px;overflow-wrap:anywhere}
+.print-card .card-brand{font-size:12px;letter-spacing:.13em}
+.print-card h3{font-size:28px;line-height:1.4;margin:48px 0 20px;font-weight:600}
+.print-card p{white-space:pre-wrap;line-height:1.9;margin:0;font-size:17px}
+.card-foot{border-top:1px solid #15181055;margin-top:auto;padding-top:18px;font-size:12px;display:flex;justify-content:space-between;gap:15px}
+.print-card .card-body{padding-bottom:32px;flex:1}
+.toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;z-index:4;font-size:14px;max-width:calc(100% - 32px);text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+noscript p{padding:20px;border:1px solid var(--line)}
+@media(prefers-reduced-motion:no-preference){
+  .hero-copy{animation:enter .8s ease-out both}.stage{animation:enter 1.2s ease-out both}
+  .mood{transition:flex .5s cubic-bezier(.2,.8,.2,1),background .3s,color .3s}
+  .mood-detail{animation:enter .45s ease-out}.letter-preview{transition:transform .4s}
+  .letter-preview:hover{transform:rotate(0deg) translateY(-5px)}
+  .swatch,.primary,.toast{transition:transform .25s,opacity .25s}
+  dialog[open]{animation:enter .35s ease-out}
+  @keyframes enter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media(min-width:1500px){.hero{min-height:710px}.stage{height:630px}}
+@media(max-width:1050px){.shell{width:calc(100% - 56px)}.hero{grid-template-columns:1fr 1fr;min-height:550px}.stage{height:500px}h1{font-size:51px}.controlbar{gap:18px}.control-group{gap:12px}.mood{padding:23px}.mood-title{font-size:17px}.mood-word{font-size:28px}.moods{gap:9px}.manifesto{gap:35px}}
+@media(max-width:760px){.shell{width:calc(100% - 40px)}header{height:76px}.brand small{display:none}nav{gap:18px}nav>a{display:none}.hero{grid-template-columns:1fr;gap:0;padding-top:42px}.hero-copy>p:not(.eyebrow){max-width:28em}h1{font-size:clamp(44px,8.6vw,64px)}.stage{height:430px;margin-top:12px}.eyebrow{margin-bottom:20px}.controlbar{grid-template-columns:1fr 1fr;gap:24px}.control-end{grid-column:1/-1;justify-content:space-between}.moods{display:grid;grid-template-columns:1fr 1fr;min-height:0}.mood{min-height:200px}.mood[aria-expanded="true"]{grid-column:1/-1;order:-1;min-height:220px}.mood-detail{margin-top:30px;max-width:none}.mood-word{margin-top:35px}.section{padding:58px 0}.manifesto{grid-template-columns:1fr;gap:42px;padding:55px 0}.letter-preview{margin:0 10px 15px}.dialog-body{grid-template-columns:1fr}.dialog-head{padding:18px 22px}footer{flex-direction:column;gap:8px}}
+@media(max-width:430px){.shell{width:calc(100% - 32px)}.stage{height:365px}.stage-caption{top:15px}.stage-bottom{gap:8px}.controlbar{grid-template-columns:1fr}.control-end{grid-column:auto}.control-group{justify-content:space-between}.range-control{max-width:180px}.mood{padding:20px;min-height:170px}.mood-title{font-size:16px}.mood-word{font-size:26px}.mood-detail{font-size:17px}.dialog-body{padding:22px}.primary{gap:22px}.dialog-head h2{font-size:20px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#experience">跳到互动作品</a>
+<div class="shell">
+<header><a class="brand" href="#top"><span class="mark" aria-hidden="true">u</span>未定义 <small>UNDEFINED</small></a><nav aria-label="主导航"><a href="#experience">探索空间</a><a href="#feelings">给此刻的你</a><button class="nav-action" type="button" data-open>留下我的名字 ↗</button></nav></header>
+<main id="top">
+<section class="hero" aria-labelledby="hero-title">
+<div class="hero-copy">
+<p class="eyebrow">人生不必预设，现在就可以开始。</p>
+<!-- 个性化修改 A：修改标题文字，保留 HTML 标签。 -->
+<h1 id="hero-title">你，未被定义。<span>可能，正在发生。</span></h1>
+<p>不必等到准备好，才开始创造。<br>拨动眼前的世界，留下只属于你的第一笔。</p>
+<a class="primary" href="#experience">探索我的可能 <span aria-hidden="true">↗</span></a>
+</div>
+<div class="stage" id="experience">
+<canvas id="art" tabindex="0" role="img" aria-label="可交互的三维粒子环。拖动旋转，轻点打散。键盘方向键旋转，空格打散。也可使用下方按钮。">你的浏览器不支持 Canvas，仍可使用下方宣言卡。</canvas>
+<div class="stage-caption"><b id="art-title">可能性的形状</b>GENERATIVE / INTERACTIVE</div>
+<div class="stage-bottom"><p class="stage-help">拖动旋转 · 轻点打散 · 再次聚合</p><button class="tiny" type="button" id="burst">打散一下 ↗</button></div>
+</div>
+</section>
+<div class="controlbar" aria-label="互动作品控制">
+<div class="control-group"><span class="control-label">我的氛围</span><div class="palette" role="group" aria-label="选择配色"><button class="swatch" type="button" data-palette="0" aria-label="青柠，好奇" aria-pressed="true"></button><button class="swatch" type="button" data-palette="1" aria-label="落日，热烈" aria-pressed="false"></button><button class="swatch" type="button" data-palette="2" aria-label="冰蓝，从容" aria-pressed="false"></button></div></div>
+<div class="control-group"><label class="control-label" for="energy">秩序 / 自由</label><div class="range-control"><input id="energy" type="range" min="0" max="100" value="28" aria-label="形态自由度"><output id="energy-value" for="energy">28</output></div></div>
+<div class="control-group control-end"><button class="text-button" id="pause" type="button" aria-pressed="false">暂停流动</button><button class="text-button" id="reset" type="button">回到最初 ↺</button></div>
+</div>
+<section class="section" id="feelings" aria-labelledby="feelings-title">
+<div class="section-heading"><h2 id="feelings-title">每一种状态，都有它的位置。</h2><p>选一个此刻的自己。这里没有标准答案。</p></div>
+<div class="moods">
+<button class="mood" type="button" aria-expanded="true" aria-controls="reply-0" data-mood="0"><span class="mood-top"><span class="mood-title">我有点好奇</span><span class="mood-symbol" aria-hidden="true">↗</span></span><span class="mood-word">Explore.</span><span class="mood-detail" id="reply-0">那就碰一碰未知。改变一个颜色，拖动一个形状，看看世界会给你什么回应。<span class="mood-small">不用知道终点，先往前一点。</span></span></button>
+<button class="mood" type="button" aria-expanded="false" aria-controls="reply-1" data-mood="1"><span class="mood-top"><span class="mood-title">我有些紧张</span><span class="mood-symbol" aria-hidden="true">+</span></span><span class="mood-word">Breathe.</span><span class="mood-detail" id="reply-1">第一次总会有一点紧张。把肩膀放松，把目标放小。你只需要完成眼前的一步。<span class="mood-small">慢慢来，也是在前进。</span></span></button>
+<button class="mood" type="button" aria-expanded="false" aria-controls="reply-2" data-mood="2"><span class="mood-top"><span class="mood-title">我暂时卡住</span><span class="mood-symbol" aria-hidden="true">+</span></span><span class="mood-word">Reset.</span><span class="mood-detail" id="reply-2">卡住是过程的一部分。保存文件，读一遍报错，或者站起来喝口水。答案可以晚一点来。<span class="mood-small">问题还没解决，你也没有被否定。</span></span></button>
+<button class="mood" type="button" aria-expanded="false" aria-controls="reply-3" data-mood="3"><span class="mood-top"><span class="mood-title">我做到了</span><span class="mood-symbol" aria-hidden="true">+</span></span><span class="mood-word">Become.</span><span class="mood-detail" id="reply-3">请认真开心一下。这个刚刚诞生的作品，是你思考、尝试和坚持的证据。<span class="mood-small">你已经让一种可能，发生了。</span></span></button>
+</div>
+</section>
+<section class="manifesto" aria-labelledby="manifesto-title">
+<div><h2 id="manifesto-title">为此刻的自己，<br>留一张不设限的宣言。</h2><p>一个名字，一句想说的话。把今天的勇气做成一张卡片，保存下来。以后回头看，你会记得从哪里开始。</p><button class="primary" type="button" data-open>制作我的宣言卡 <span aria-hidden="true">↗</span></button></div>
+<div class="letter-preview" aria-label="宣言示例"><small>A NOTE TO MY FUTURE SELF</small><strong id="preview-quote">我还不知道会走多远，<br>但今天，我决定出发。</strong><div class="signature" id="preview-signature">签名：正在成为自己的我</div></div>
+</section>
+<noscript><p>请启用 JavaScript 体验粒子互动和宣言卡。文字内容仍可正常阅读。</p></noscript>
+</main>
+<footer>
+<!-- 个性化修改 B：把“正在学习的我”替换成你的昵称。 -->
+<p>由 正在学习的我 亲手开启。作品可以小，开始值得被记住。</p><p>临时互动不上传 · 刷新后重置 <a href="#top">回到顶部 ↑</a></p>
+</footer>
+</div>
+<dialog id="letter-dialog" aria-labelledby="dialog-title">
+<div class="dialog-head"><h2 id="dialog-title">写给正在出发的自己</h2><button class="close" type="button" id="close-dialog" aria-label="关闭宣言卡">×</button></div>
+<div class="dialog-body">
+<form id="letter-form">
+<label class="field"><span>你的昵称</span><input type="text" id="name" maxlength="16" required placeholder="例如：小满" autocomplete="off"></label>
+<label class="field"><span>此刻的宣言</span><textarea id="declaration" maxlength="80" required placeholder="我还不知道会走多远，但今天，我决定出发。"></textarea></label>
+<p class="form-note">昵称最多 16 字符，宣言最多 80 字符。预览实时变化；下载会保存为 PNG 图片。内容只在本页处理。</p>
+<div class="form-actions"><button class="primary" type="submit" id="download">保存宣言卡 <span aria-hidden="true">↓</span></button></div>
+<p class="status" id="form-status" role="status" aria-live="polite"></p>
+</form>
+<article class="print-card" aria-label="宣言卡实时预览"><span class="card-brand">未定义 / UNDEFINED</span><div class="card-body"><h3 id="card-name">你好，未来的我。</h3><p id="card-text">我还不知道会走多远，但今天，我决定出发。</p></div><div class="card-foot"><span id="card-date"></span><span>从这里开始 ↗</span></div></article>
+</div>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+"use strict";
+// 无外部资源；下面的 Canvas 是真正可操控的数学粒子作品。
+const $ = (selector) => document.querySelector(selector);
+const $$ = (selector) => [...document.querySelectorAll(selector)];
+const palettes = [
+  {hex:"#d6f38c",rgb:[214,243,140],name:"好奇，让可能生长。"},
+  {hex:"#ffad91",rgb:[255,173,145],name:"热烈，给今天一点勇气。"},
+  {hex:"#a0c4ff",rgb:[160,196,255],name:"从容，按自己的节奏。"}
+];
+let paletteIndex=0;
+let toastTimer;
+function notify(text) {
+  $("#toast").textContent=text; $("#toast").classList.add("show");
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>$("#toast").classList.remove("show"),2400);
+}
+function setPalette(index,announce=true) {
+  paletteIndex=index; const p=palettes[index];
+  document.documentElement.style.setProperty("--accent",p.hex);
+  document.documentElement.style.setProperty("--accent-rgb",p.rgb.join(","));
+  $$("[data-palette]").forEach(b=>b.setAttribute("aria-pressed",String(Number(b.dataset.palette)===index)));
+  if(announce)notify(p.name);
+  render();
+}
+$$("[data-palette]").forEach(b=>b.addEventListener("click",()=>setPalette(Number(b.dataset.palette))));
+const canvas=$("#art");
+const ctx=canvas.getContext("2d");
+const reduced=window.matchMedia("(prefers-reduced-motion: reduce)");
+let paused=reduced.matches,visible=true,inView=true,dragging=false,moved=false;
+let width=600,height=550,angle=.35,tilt=.55,freedom=.28,pulse=0;
+let targetAngle=angle,targetTilt=tilt,targetFreedom=freedom,pulseTarget=0;
+let velocityX=0,velocityY=0,activePointer=null;
+let lastX=0,lastY=0,startX=0,startY=0,lastTime=0,lastMoveTime=0,raf=0;
+// 缓存固定三角函数和投影缓冲区，避免每帧创建几千个对象。
+const points=[];
+for(let row=0;row<92;row++)for(let col=0;col<23;col++){
+  const u=row/92*Math.PI*2,v=col/23*Math.PI*2;
+  points.push({cu:Math.cos(u),su:Math.sin(u),s3:Math.sin(u*3),c3:Math.cos(u*3),
+    cv:Math.cos(v),sv:Math.sin(v),spread:.4+Math.abs(Math.sin(row*127.1+col*311.7)*43758.5453%1)*1.5});
+}
+const px=new Float32Array(points.length),py=new Float32Array(points.length),sizes=new Float32Array(points.length);
+const buckets=Array.from({length:16},()=>[]);
+function render() {
+  if(!ctx)return;
+  ctx.clearRect(0,0,width,height);
+  const scale=Math.min(width,height)*.27;
+  const ca=Math.cos(angle),sa=Math.sin(angle),ct=Math.cos(tilt),st=Math.sin(tilt);
+  const color=palettes[paletteIndex].rgb.join(",");
+  const pointScale=Math.min(width/500,1.25);
+  for(const bucket of buckets)bucket.length=0;
+  // 同一环截面的扭转参数只计算一次。
+  let co=1,si=0,wave=0;
+  for(let i=0;i<points.length;i++){
+    const p=points[i];
+    if(i%23===0){const offset=p.s3*freedom*1.8;co=Math.cos(offset);si=Math.sin(offset);wave=(p.s3*ca+p.c3*sa)*freedom*.38;}
+    const cosTwist=p.cv*co-p.sv*si,sinTwist=p.sv*co+p.cv*si;
+    const radius=1.08+.43*cosTwist,expand=1+pulse*p.spread;
+    const x=radius*p.cu*expand,y=(.43*sinTwist+wave)*expand,z=radius*p.su*expand;
+    const rx=x*ca-z*sa,rz=x*sa+z*ca,ry=y*ct-rz*st,depth=y*st+rz*ct;
+    const perspective=3.7/Math.max(.8,3.7+depth);
+    px[i]=width*.5+rx*scale*perspective;py[i]=height*.48+ry*scale*perspective;
+    sizes[i]=(1+perspective*.32)*pointScale;
+    const shade=Math.max(0,Math.min(15,Math.floor((1.7-depth)/3.7*16)));
+    buckets[shade].push(i);
+  }
+  // 同色粒子按深度分为 16 批绘制，替代逐点排序和两千次 fill。
+  for(let shade=0;shade<buckets.length;shade++){
+    ctx.beginPath();
+    for(const i of buckets[shade]){ctx.moveTo(px[i]+sizes[i],py[i]);ctx.arc(px[i],py[i],sizes[i],0,Math.PI*2);}
+    ctx.fillStyle="rgba("+color+","+(.22+shade/15*.68)+")";ctx.fill();
+  }
+}
+function resize(){
+  const rect=canvas.getBoundingClientRect();width=rect.width;height=rect.height;
+  const dpr=Math.min(window.devicePixelRatio||1,2);
+  canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+  if(ctx)ctx.setTransform(dpr,0,0,dpr,0,0);render();
+}
+function updatePause(){ $("#pause").textContent=paused?"继续流动":"暂停流动";$("#pause").setAttribute("aria-pressed",String(paused));}
+function settleImmediately(){
+  angle=targetAngle;tilt=targetTilt;freedom=targetFreedom;
+  pulse=pulseTarget=0;velocityX=velocityY=0;render();
+}
+function needsFrame(){
+  return !paused||dragging||Math.abs(targetAngle-angle)>.0001||Math.abs(targetTilt-tilt)>.0001||
+    Math.abs(targetFreedom-freedom)>.0001||Math.abs(velocityX)+Math.abs(velocityY)>.001||pulse>.0001||pulseTarget>.0001;
+}
+function frame(time){
+  raf=0;
+  if(!visible)return;
+  const dt=Math.min(Math.max((time-lastTime)/1000,0),.05);lastTime=time;
+  if(!paused&&!dragging)targetAngle+=dt*.19;
+  if(!dragging&&!reduced.matches){
+    targetAngle+=velocityX*dt;
+    targetTilt=Math.max(-1.4,Math.min(1.4,targetTilt+velocityY*dt));
+    const friction=Math.exp(-5.5*dt);velocityX*=friction;velocityY*=friction;
+    if(Math.abs(velocityX)<.001)velocityX=0;
+    if(Math.abs(velocityY)<.001)velocityY=0;
+  }
+  // 按真实时间阻尼，让 60 Hz 和高刷新率屏幕具有接近的手感。
+  const follow=1-Math.exp(-(dragging?32:15)*dt);
+  angle+=(targetAngle-angle)*follow;tilt+=(targetTilt-tilt)*follow;
+  freedom+=(targetFreedom-freedom)*(1-Math.exp(-12*dt));
+  pulse+=(pulseTarget-pulse)*(1-Math.exp(-22*dt));
+  pulseTarget*=Math.exp(-3.8*dt);
+  if(pulse<.0001&&pulseTarget<.0001)pulse=pulseTarget=0;
+  render();
+  if(needsFrame())raf=requestAnimationFrame(frame);
+}
+function start(){
+  if(!visible)return;
+  if(reduced.matches){settleImmediately();if(paused)return;}
+  if(!raf){lastTime=performance.now();raf=requestAnimationFrame(frame);}
+}
+function burst(){
+  if(reduced.matches){targetAngle+=.6;settleImmediately();notify("换个角度，可能不止一种。");return;}
+  pulseTarget=Math.min(.9,pulseTarget+.8);start();
+}
+$("#burst").addEventListener("click",burst);
+$("#pause").addEventListener("click",()=>{
+  paused=!paused;
+  if(paused){velocityX=velocityY=0;targetAngle=angle;targetTilt=tilt;}
+  updatePause();start();
+});
+$("#energy").addEventListener("input",e=>{
+  targetFreedom=Number(e.target.value)/100;$("#energy-value").value=e.target.value;start();
+});
+$("#reset").addEventListener("click",()=>{
+  // 选择最近的同向角度，避免多次旋转后重置绕行数圈。
+  targetAngle=angle+Math.atan2(Math.sin(.35-angle),Math.cos(.35-angle));
+  targetTilt=.55;targetFreedom=.28;pulseTarget=0;velocityX=velocityY=0;paused=reduced.matches;
+  $("#energy").value="28";$("#energy-value").value="28";setPalette(0,false);updatePause();start();notify("回到最初，再试一种可能。");
+});
+canvas.addEventListener("pointerdown",e=>{
+  if(e.button!==0||activePointer!==null)return;
+  activePointer=e.pointerId;dragging=true;moved=false;velocityX=velocityY=0;
+  targetAngle=angle;targetTilt=tilt;
+  lastX=startX=e.clientX;lastY=startY=e.clientY;lastMoveTime=performance.now();
+  canvas.setPointerCapture(e.pointerId);canvas.classList.add("dragging");start();
+});
+canvas.addEventListener("pointermove",e=>{
+  if(!dragging||e.pointerId!==activePointer)return;
+  const now=performance.now(),dt=Math.max((now-lastMoveTime)/1000,.008);
+  const dx=(e.clientX-lastX)*.006,dy=(e.clientY-lastY)*.006;
+  if(Math.hypot(e.clientX-startX,e.clientY-startY)>6)moved=true;
+  targetAngle+=dx;targetTilt=Math.max(-1.4,Math.min(1.4,targetTilt+dy));
+  velocityX=velocityX*.4+Math.max(-3,Math.min(3,dx/dt))*.6;
+  velocityY=velocityY*.4+Math.max(-2,Math.min(2,dy/dt))*.6;
+  lastX=e.clientX;lastY=e.clientY;lastMoveTime=now;
+  // 输入事件只更新目标；统一在动画帧中绘制。
+  start();
+});
+function endDrag(e){
+  if(!dragging||e.pointerId!==activePointer)return;
+  dragging=false;activePointer=null;canvas.classList.remove("dragging");
+  if(canvas.hasPointerCapture(e.pointerId))canvas.releasePointerCapture(e.pointerId);
+  if(e.type!=="pointerup"||!moved||paused||reduced.matches||performance.now()-lastMoveTime>100)velocityX=velocityY=0;
+  if(e.type==="pointerup"&&!moved)burst();else start();
+}
+canvas.addEventListener("pointerup",endDrag);canvas.addEventListener("pointercancel",endDrag);
+canvas.addEventListener("lostpointercapture",endDrag);
+canvas.addEventListener("keydown",e=>{
+  const actions={ArrowLeft:()=>targetAngle-=.15,ArrowRight:()=>targetAngle+=.15,ArrowUp:()=>targetTilt=Math.max(-1.4,targetTilt-.15),ArrowDown:()=>targetTilt=Math.min(1.4,targetTilt+.15)," ":burst};
+  if(actions[e.key]){e.preventDefault();actions[e.key]();start();}
+});
+function syncVisibility(){
+  visible=inView&&!document.hidden;
+  if(visible)start();
+  else{
+    cancelAnimationFrame(raf);raf=0;velocityX=velocityY=0;
+    if(activePointer!==null&&canvas.hasPointerCapture(activePointer))canvas.releasePointerCapture(activePointer);
+    activePointer=null;dragging=false;canvas.classList.remove("dragging");
+  }
+}
+new ResizeObserver(resize).observe(canvas);
+new IntersectionObserver(entries=>{inView=entries[0].isIntersecting;syncVisibility();}).observe(canvas);
+document.addEventListener("visibilitychange",syncVisibility);
+reduced.addEventListener("change",()=>{paused=reduced.matches;updatePause();start();});
+updatePause();resize();start();
+if(!ctx)$("#art-title").textContent="浏览器未启用画布，可继续制作宣言卡";
+
+// 个性化修改 C：修改 HTML 中 reply-0 至 reply-3 里的心情回应。
+$$("[data-mood]").forEach(button=>button.addEventListener("click",()=>{
+  $$("[data-mood]").forEach(item=>{
+    const active=item===button;item.setAttribute("aria-expanded",String(active));
+    item.querySelector(".mood-symbol").textContent=active?"↗":"+";
+  });
+}));
+
+const dialog=$("#letter-dialog");
+let opener=null;
+function preview(){
+  const name=$("#name").value.trim(),text=$("#declaration").value.trim();
+  $("#card-name").textContent=name?"你好，"+name+"。":"你好，未来的我。";
+  $("#card-text").textContent=text||"我还不知道会走多远，但今天，我决定出发。";
+  $("#preview-quote").textContent=text||"我还不知道会走多远，但今天，我决定出发。";
+  $("#preview-signature").textContent="签名："+(name||"正在成为自己的我");
+  $("#form-status").textContent="";
+}
+function openLetter(button){opener=button;dialog.showModal();document.body.classList.add("modal-open");$("#name").focus();}
+$$("[data-open]").forEach(button=>button.addEventListener("click",()=>openLetter(button)));
+$("#close-dialog").addEventListener("click",()=>dialog.close());
+dialog.addEventListener("click",event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
+dialog.addEventListener("close",()=>{document.body.classList.remove("modal-open");if(opener)opener.focus();});
+$("#name").addEventListener("input",preview);$("#declaration").addEventListener("input",preview);
+const date=new Intl.DateTimeFormat("zh-CN",{year:"numeric",month:"long",day:"numeric"}).format(new Date());
+$("#card-date").textContent=date;
+function wrapText(context,text,maxWidth){
+  const lines=[];for(const paragraph of text.split("\n")){
+    let line="";for(const char of paragraph){if(line&&context.measureText(line+char).width>maxWidth){lines.push(line);line=char;}else line+=char;}lines.push(line);
+  }return lines;
+}
+$("#letter-form").addEventListener("submit",async event=>{
+  event.preventDefault();
+  const name=$("#name").value.trim(),text=$("#declaration").value.trim();
+  if(!name||!text){$("#form-status").textContent="请写下昵称和宣言，不能只输入空格。";(!name?$("#name"):$("#declaration")).focus();return;}
+  const button=$("#download");button.disabled=true;
+  $("#form-status").textContent="正在生成你的纪念卡……";
+  try{
+    const output=document.createElement("canvas");output.width=1200;output.height=1500;
+    const paint=output.getContext("2d");if(!paint)throw new Error("canvas unavailable");
+    paint.fillStyle=palettes[paletteIndex].hex;paint.fillRect(0,0,1200,1500);
+    paint.fillStyle="#151810";paint.font="24px sans-serif";paint.fillText("未定义 / UNDEFINED",90,110);
+    paint.fillRect(90,175,80,7);
+    paint.font="600 64px sans-serif";
+    const nameLines=wrapText(paint,"你好，"+name+"。",1000);
+    nameLines.forEach((line,i)=>paint.fillText(line,90,350+i*84));
+    paint.font="42px sans-serif";
+    const lines=wrapText(paint,text,1000);
+    let fontSize=42;
+    while(lines.length*fontSize*1.7>620&&fontSize>20)fontSize-=2;
+    paint.font=fontSize+"px sans-serif";
+    const finalLines=wrapText(paint,text,1000);
+    // 过多手动换行时，先合并空行，让最长输入也完整保留。
+    const compact=finalLines.length>16?wrapText(paint,text.replace(/\s+/g," "),1000):finalLines;
+    const y=390+nameLines.length*84;
+    compact.forEach((line,i)=>paint.fillText(line,90,y+i*fontSize*1.7));
+    paint.strokeStyle="#15181066";paint.beginPath();paint.moveTo(90,1310);paint.lineTo(1110,1310);paint.stroke();
+    paint.font="25px sans-serif";paint.fillText(date,90,1370);
+    paint.textAlign="right";paint.fillText("从这里开始",1110,1370);
+    const blob=await new Promise(resolve=>output.toBlob(resolve,"image/png"));
+    if(!blob)throw new Error("image export failed");
+    const url=URL.createObjectURL(blob);const link=document.createElement("a");
+    link.href=url;link.download="我的宣言卡.png";document.body.append(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),30000);
+    $("#form-status").textContent="图片已生成。请在浏览器下载列表中查看“我的宣言卡.png”。";
+  }catch(error){$("#form-status").textContent="图片生成失败，请换用较新的浏览器重试；你也可以截图保存右侧卡片。";}
+  finally{button.disabled=false;}
+});
+</script>
+</body>
+</html>
