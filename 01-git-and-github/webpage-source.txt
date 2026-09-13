@@ -8,7 +8,7 @@
 <title>未定义 UNDEFINED · 从这里开始</title>
 <style>
 /* 单文件作品：没有字体、图片或脚本的外部依赖。 */
-:root{--bg:#101112;--panel:#191b1d;--ink:#f3f1eb;--muted:#aaaead;--line:#35383a;--accent:#d6f38c;--accent-rgb:214,243,140;--dark:#151810;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;color-scheme:dark}
+:root{--bg:#101112;--panel:#191b1d;--ink:#f3f1eb;--muted:#aaaead;--line:#35383a;--accent:#a0c4ff;--accent-rgb:160,196,255;--dark:#111827;font-family:"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;color-scheme:dark}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;scroll-padding-top:25px}
 body{margin:0;background:var(--bg);color:var(--ink);font-size:16px;line-height:1.7}
@@ -108,7 +108,7 @@ input::placeholder,textarea::placeholder{color:var(--muted)}
 .print-card .card-brand{font-size:12px;letter-spacing:.13em}
 .print-card h3{font-size:28px;line-height:1.4;margin:48px 0 20px;font-weight:600}
 .print-card p{white-space:pre-wrap;line-height:1.9;margin:0;font-size:17px}
-.card-foot{border-top:1px solid #15181055;margin-top:auto;padding-top:18px;font-size:12px;display:flex;justify-content:space-between;gap:15px}
+.card-foot{border-top:1px solid #11182755;margin-top:auto;padding-top:18px;font-size:12px;display:flex;justify-content:space-between;gap:15px}
 .print-card .card-body{padding-bottom:32px;flex:1}
 .toast{position:fixed;bottom:25px;left:50%;transform:translate(-50%,15px);opacity:0;pointer-events:none;background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;z-index:4;font-size:14px;max-width:calc(100% - 32px);text-align:center}
 .toast.show{opacity:1;transform:translate(-50%,0)}
@@ -149,7 +149,7 @@ noscript p{padding:20px;border:1px solid var(--line)}
 </div>
 </section>
 <div class="controlbar" aria-label="互动作品控制">
-<div class="control-group"><span class="control-label">我的氛围</span><div class="palette" role="group" aria-label="选择配色"><button class="swatch" type="button" data-palette="0" aria-label="青柠，好奇" aria-pressed="true"></button><button class="swatch" type="button" data-palette="1" aria-label="落日，热烈" aria-pressed="false"></button><button class="swatch" type="button" data-palette="2" aria-label="冰蓝，从容" aria-pressed="false"></button></div></div>
+<div class="control-group"><span class="control-label">我的氛围</span><div class="palette" role="group" aria-label="选择配色"><button class="swatch" type="button" data-palette="0" aria-label="青柠，好奇" aria-pressed="false"></button><button class="swatch" type="button" data-palette="1" aria-label="落日，热烈" aria-pressed="false"></button><button class="swatch" type="button" data-palette="2" aria-label="冰蓝，从容" aria-pressed="true"></button></div></div>
 <div class="control-group"><label class="control-label" for="energy">秩序 / 自由</label><div class="range-control"><input id="energy" type="range" min="0" max="100" value="28" aria-label="形态自由度"><output id="energy-value" for="energy">28</output></div></div>
 <div class="control-group control-end"><button class="text-button" id="pause" type="button" aria-pressed="false">暂停流动</button><button class="text-button" id="reset" type="button">回到最初 ↺</button></div>
 </div>
@@ -197,7 +197,7 @@ const palettes = [
   {hex:"#ffad91",rgb:[255,173,145],name:"热烈，给今天一点勇气。"},
   {hex:"#a0c4ff",rgb:[160,196,255],name:"从容，按自己的节奏。"}
 ];
-let paletteIndex=0;
+let paletteIndex=2;
 let toastTimer;
 function notify(text) {
   $("#toast").textContent=text; $("#toast").classList.add("show");
@@ -318,7 +318,7 @@ $("#reset").addEventListener("click",()=>{
   // 选择最近的同向角度，避免多次旋转后重置绕行数圈。
   targetAngle=angle+Math.atan2(Math.sin(.35-angle),Math.cos(.35-angle));
   targetTilt=.55;targetFreedom=.28;pulseTarget=0;velocityX=velocityY=0;paused=reduced.matches;
-  $("#energy").value="28";$("#energy-value").value="28";setPalette(0,false);updatePause();start();notify("回到最初，再试一种可能。");
+  $("#energy").value="28";$("#energy-value").value="28";setPalette(2,false);updatePause();start();notify("回到最初，再试一种可能。");
 });
 canvas.addEventListener("pointerdown",e=>{
   if(e.button!==0||activePointer!==null)return;
@@ -409,7 +409,7 @@ $("#letter-form").addEventListener("submit",async event=>{
     const output=document.createElement("canvas");output.width=1200;output.height=1500;
     const paint=output.getContext("2d");if(!paint)throw new Error("canvas unavailable");
     paint.fillStyle=palettes[paletteIndex].hex;paint.fillRect(0,0,1200,1500);
-    paint.fillStyle="#151810";paint.font="24px sans-serif";paint.fillText("未定义 / UNDEFINED",90,110);
+    paint.fillStyle="#111827";paint.font="24px sans-serif";paint.fillText("未定义 / UNDEFINED",90,110);
     paint.fillRect(90,175,80,7);
     paint.font="600 64px sans-serif";
     const nameLines=wrapText(paint,"你好，"+name+"。",1000);
@@ -424,7 +424,7 @@ $("#letter-form").addEventListener("submit",async event=>{
     const compact=finalLines.length>16?wrapText(paint,text.replace(/\s+/g," "),1000):finalLines;
     const y=390+nameLines.length*84;
     compact.forEach((line,i)=>paint.fillText(line,90,y+i*fontSize*1.7));
-    paint.strokeStyle="#15181066";paint.beginPath();paint.moveTo(90,1310);paint.lineTo(1110,1310);paint.stroke();
+    paint.strokeStyle="#11182766";paint.beginPath();paint.moveTo(90,1310);paint.lineTo(1110,1310);paint.stroke();
     paint.font="25px sans-serif";paint.fillText(date,90,1370);
     paint.textAlign="right";paint.fillText("从这里开始",1110,1370);
     const blob=await new Promise(resolve=>output.toBlob(resolve,"image/png"));
